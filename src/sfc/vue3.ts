@@ -2,16 +2,19 @@ import { parse } from '@vue/compiler-sfc';
 import type { VueSFCParser, VuePluginOptions, VueSFCPart } from '../types';
 import { extractTemplateKeys } from '../template/extract';
 
-interface SFCDescriptor {
-	template: { content: string } | null;
-	script: { content: string } | null;
-	scriptSetup: { content: string } | null;
-	styles: Array<{ content: string }>;
-	customBlocks: Array<{ type: string; content: string }>;
+interface SFCParseResult {
+	descriptor: {
+		template: { content: string } | null;
+		script: { content: string } | null;
+		scriptSetup: { content: string } | null;
+		styles: Array<{ content: string }>;
+		customBlocks: Array<{ type: string; content: string }>;
+	};
 }
 
 export function createVue3Parser(code: string, options: VuePluginOptions): VueSFCParser {
-	const descriptor = parse(code) as unknown as SFCDescriptor;
+	const result = parse(code) as unknown as SFCParseResult;
+	const descriptor = result.descriptor;
 
 	return {
 		extractScript(): string {

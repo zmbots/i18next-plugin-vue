@@ -9,7 +9,7 @@ export function extractTemplateKeys(template: string, options: VuePluginOptions)
 	const i18nAttr = options.attr;
 	const bindEnabled = options.vueBindAttr;
 
-	const attrRegex = new RegExp(`([a-zA-Z0-9_-]+)=(["'])(.*?)\\2`, 'g');
+	const attrRegex = /([a-zA-Z0-9_:@-]+)=(["'])(.*?)\2/g;
 
 	let pos = 0;
 	while (pos < template.length) {
@@ -44,8 +44,14 @@ export function extractTemplateKeys(template: string, options: VuePluginOptions)
 					}
 
 					if (bindEnabled) {
-						if (name.startsWith('v-bind:') || name.startsWith(':') || name.startsWith('v-on:') || name.startsWith('@')) {
-							if (isTranslationExpression(value, options.functions || [])) {
+						const isVBind = name.startsWith('v-bind:');
+						const isColon = name.startsWith(':');
+						const isVOn = name.startsWith('v-on:');
+						const isAt = name.startsWith('@');
+
+						if (isVBind || isColon || isVOn || isAt) {
+							const functions = options.functions ?? [];
+							if (isTranslationExpression(value, functions)) {
 								lines.push(value);
 							}
 						}

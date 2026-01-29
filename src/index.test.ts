@@ -296,18 +296,263 @@ t('script.key')
 
 		it('should handle files with custom filePatterns', () => {
 			const plugin = i18nextVuePlugin({ filePatterns: ['.nvue'] });
+			const vueCode = `<template>
+  <span data-i18n="test.key"></span>
+</template>`;
+			const result = plugin.onLoad!(vueCode, 'App.nvue');
+
+			expect(result).toContain("t('test.key')");
+		});
+
+		it('should skip non-matching file extensions', () => {
+			const plugin = i18nextVuePlugin({ filePatterns: ['.vue'] });
 			const code = 't("test")';
 			const result = plugin.onLoad!(code, 'App.nvue');
 
 			expect(result).toBe(code);
 		});
 
-		it('should return empty string for vue file with no content', () => {
+		it('should return empty for vue file with no content', () => {
 			const plugin = i18nextVuePlugin();
-			const vueCode = '<template></template>';
-			const result = plugin.onLoad!(vueCode, 'Empty.vue');
+			const code = 't("test")';
+			const result = plugin.onLoad!(code, 'App.vue');
 
 			expect(result).toBe('');
+		});
+	});
+
+	describe('Vue 3 Composition API', () => {
+		it('should extract keys from script setup', () => {
+			const options = normalizeOptions({});
+			const script = `t('welcome.message')`;
+
+			const keys = extractScriptKeys(script, options);
+
+			expect(keys).toHaveLength(1);
+			expect(keys[0].key).toBe('welcome.message');
+		});
+
+		it('should extract keys with default value string', () => {
+			const options = normalizeOptions({});
+			const script = `t('greeting', 'Hello')`;
+
+			const keys = extractScriptKeys(script, options);
+
+			expect(keys).toHaveLength(1);
+			expect(keys[0].key).toBe('greeting');
+			expect(keys[0].defaultValue).toBe('Hello');
+		});
+
+		it('should extract keys from multiple translation calls', () => {
+			const options = normalizeOptions({});
+			const script = `
+<script setup>
+const { t } = useTranslation().t
+t('key1')
+\$t('key2')
+</script>`;
+
+			const keys = extractScriptKeys(script, options);
+
+			expect(keys).toHaveLength(2);
+			expect(keys.map((k) => k.key)).toEqual(['key1', 'key2']);
+		});
+	});
+
+	describe('Vue 2 Options API', () => {
+		it('should extract keys from data()', () => {
+			const options = normalizeOptions({});
+			const script = `
+export default {
+  data() {
+    return {
+      title: this.\$t('page.title')
+    }
+  }
+}`;
+
+			const keys = extractScriptKeys(script, options);
+
+			expect(keys).toHaveLength(1);
+			expect(keys[0].key).toBe('page.title');
+		});
+
+		it('should extract keys from methods', () => {
+			const options = normalizeOptions({});
+			const script = `
+export default {
+  methods: {
+    submit() {
+      return this.\$t('button.submit')
+    }
+  }
+}`;
+
+			const keys = extractScriptKeys(script, options);
+
+			expect(keys).toHaveLength(1);
+			expect(keys[0].key).toBe('button.submit');
+		});
+	});
+
+	describe('Namespace Handling', () => {
+		it('should extract namespace from useTranslation', () => {
+			const options = normalizeOptions({});
+			const script = `t('myNamespace:key')`;
+
+			const keys = extractScriptKeys(script, options);
+
+			expect(keys).toHaveLength(1);
+			expect(keys[0].key).toBe('key');
+			expect(keys[0].namespace).toBe('myNamespace');
+		});
+
+		it('should extract namespace from withTranslation', () => {
+			const options = normalizeOptions({
+				namespaceFunctions: ['withTranslation', 'useTranslation'],
+			});
+			const script = `t('shared:key')`;
+
+			const keys = extractScriptKeys(script, options);
+
+			expect(keys).toHaveLength(1);
+			expect(keys[0].key).toBe('key');
+			expect(keys[0].namespace).toBe('shared');
+		});
+
+		it('should handle inline namespace in key', () => {
+			const options = normalizeOptions({});
+			const script = `t('ns:key')`;
+
+			const keys = extractScriptKeys(script, options);
+
+			expect(keys).toHaveLength(1);
+			expect(keys[0].key).toBe('key');
+			expect(keys[0].namespace).toBe('ns');
+		});
+	});
+
+	describe('Context and Plurals', () => {
+		it('should extract context from options', () => {
+			const options = normalizeOptions({});
+			const script = `t('user.name', { context: 'male' })`;
+
+			const contexts = extractContextFromExpression(script, options);
+
+			expect(contexts).toEqual(['male']);
+		});
+
+		it('should extract multiple contexts', () => {
+			const options = normalizeOptions({});
+			const script = `
+t('user.name', { context: 'male' })
+t('user.name', { context: 'female' })`;
+
+			const contexts = extractContextFromExpression(script, options);
+
+			expect(contexts).toEqual(['male', 'female']);
+		});
+	});
+
+	describe('Template Bindings', () => {
+		it('should extract keys from v-bind directive', () => {
+			const options = normalizeOptions({});
+			const template = `<input v-bind:placeholder="t('input.placeholder')">`;
+
+			const result = extractTemplateKeys(template, options);
+
+			expect(result).toContain("t('input.placeholder')");
+		});
+
+		it('should extract keys from shorthand : binding', () => {
+			const options = normalizeOptions({});
+			const template = `<button :aria-label="t('button.aria')">Click</button>`;
+
+			const result = extractTemplateKeys(template, options);
+
+			expect(result).toContain("t('button.aria')");
+		});
+
+		it('should extract keys from v-on directive', () => {
+			const options = normalizeOptions({});
+			const template = `<button @click="t('button.click')">Click</button>`;
+
+			const result = extractTemplateKeys(template, options);
+
+			expect(result).toContain("t('button.click')");
+		});
+
+		it('should respect vueBindAttr option', () => {
+			const options = normalizeOptions({ vueBindAttr: false });
+			const template = `<button :aria-label="t('button.aria')">Click</button>`;
+
+			const result = extractTemplateKeys(template, options);
+
+			expect(result).toBe('');
+		});
+	});
+
+	describe('Custom Attributes', () => {
+		it('should use custom data-i18n attribute', () => {
+			const options = normalizeOptions({ attr: 'i18n-key' });
+			const template = `<span i18n-key="custom.key"></span>`;
+
+			const result = extractTemplateKeys(template, options);
+
+			expect(result).toContain("t('custom.key')");
+		});
+
+		it('should use custom functions', () => {
+			const options = normalizeOptions({ functions: ['translate', '$trans'] });
+			const template = `<span :title="translate('my.key')"></span>`;
+
+			const result = extractTemplateKeys(template, options);
+
+			expect(result).toContain("translate('my.key')");
+		});
+	});
+
+	describe('Edge Cases', () => {
+		it('should handle empty script', () => {
+			const options = normalizeOptions({});
+			const keys = extractScriptKeys('', options);
+
+			expect(keys).toEqual([]);
+		});
+
+		it('should handle script without translation calls', () => {
+			const options = normalizeOptions({});
+			const script = `const x = 1; console.log('hello');`;
+
+			const keys = extractScriptKeys(script, options);
+
+			expect(keys).toEqual([]);
+		});
+
+		it('should handle special characters in keys', () => {
+			const options = normalizeOptions({});
+			const script = `t('key.with.dots.and-dashes')`;
+
+			const keys = extractScriptKeys(script, options);
+
+			expect(keys).toHaveLength(1);
+			expect(keys[0].key).toBe('key.with.dots.and-dashes');
+		});
+
+		it('should handle template with multiple elements', () => {
+			const options = normalizeOptions({});
+			const template = `
+<div>
+  <h1 data-i18n="header.title"></h1>
+  <p data-i18n="content.body"></p>
+  <button :title="t('button.title')">Submit</button>
+</div>`;
+
+			const result = extractTemplateKeys(template, options);
+
+			expect(result).toContain("t('header.title')");
+			expect(result).toContain("t('content.body')");
+			expect(result).toContain("t('button.title')");
 		});
 	});
 });
