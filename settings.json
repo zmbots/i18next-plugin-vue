@@ -1,0 +1,6 @@
+{
+	"editor.tabSize": 4,
+	"editor.insertSpaces": false,
+	"cSpell.words": ["lazycatcloud", "nuxt"],
+	"typescript.tsdk": "node_modules/typescript/lib"
+}

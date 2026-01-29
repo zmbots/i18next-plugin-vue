@@ -4,11 +4,11 @@ i18next-cli 插件，用于从 Vue 单文件组件 (SFC) 中提取 i18n 翻译�
 
 ## 特性
 
--   **完整 Vue 支持**: 支持 Vue 2.6+ 和 Vue 3.x
--   **双模式解析**: 自动处理 `<script>` 和 `<template>` 中的翻译调用
--   **多种语法**: 支持 `t()` 函数、`data-i18n` 属性、动态绑定等
--   **TypeScript 支持**: 完整的类型定义
--   **高度可配置**: 自定义函数名、属性名、文件模式等
+- **完整 Vue 支持**: 支持 Vue 2.6+ 和 Vue 3.x
+- **双模式解析**: 自动处理 `<script>` 和 `<template>` 中的翻译调用
+- **多种语法**: 支持 `t()` 函数、`data-i18n` 属性、动态绑定等
+- **TypeScript 支持**: 完整的类型定义
+- **高度可配置**: 自定义函数名、属性名、文件模式等
 
 ## 安装
 
@@ -22,8 +22,8 @@ npm install i18next-cli-plugin-vue --save-dev
 
 ```javascript
 // i18next.config.js
-import { defineConfig } from 'i18next-cli'
-import i18nextVuePlugin from 'i18next-cli-plugin-vue'
+import { defineConfig } from 'i18next-cli';
+import i18nextVuePlugin from 'i18next-cli-plugin-vue';
 
 export default defineConfig({
 	locales: ['en', 'zh', 'fr'],
@@ -33,15 +33,15 @@ export default defineConfig({
 		defaultNS: 'translation',
 	},
 	plugins: [i18nextVuePlugin()],
-})
+});
 ```
 
 ### 完整配置
 
 ```javascript
 // i18next.config.js
-import { defineConfig } from 'i18next-cli'
-import i18nextVuePlugin from 'i18next-cli-plugin-vue'
+import { defineConfig } from 'i18next-cli';
+import i18nextVuePlugin from 'i18next-cli-plugin-vue';
 
 export default defineConfig({
 	locales: ['en', 'zh'],
@@ -74,7 +74,7 @@ export default defineConfig({
 			filePatterns: ['.vue', '.nvue'],
 		}),
 	],
-})
+});
 ```
 
 ## 支持的语法
@@ -104,11 +104,11 @@ export default defineConfig({
 
 ```vue
 <script>
-import { useTranslation } from 'vue-i18next'
+import { useTranslation } from 'vue-i18next';
 
 export default {
 	setup() {
-		const { t } = useTranslation('namespace')
+		const { t } = useTranslation('namespace');
 
 		return {
 			// 简单键
@@ -119,9 +119,9 @@ export default {
 
 			// 带命名空间前缀
 			namespaced: t('shared:key'),
-		}
+		};
 	},
-}
+};
 </script>
 ```
 
@@ -129,15 +129,15 @@ export default {
 
 ### 选项
 
-| 选项 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
-| `vueVersion` | `2 \| 3 \| undefined` | `undefined` | 显式指定 Vue 版本 |
-| `vueBindAttr` | `boolean` | `true` | 是否解析动态绑定 |
-| `functions` | `string[]` | `['t', '$t']` | 翻译函数名 |
-| `namespaceFunctions` | `string[]` | `['useTranslation', 'withTranslation']` | 命名空间函数 |
-| `attr` | `string` | `'data-i18n'` | i18n 属性名 |
-| `optionAttr` | `string` | `'data-i18n-options'` | 选项属性名 |
-| `filePatterns` | `string[]` | `['.vue', '.nvue']` | 文件匹配模式 |
+| 选项                 | 类型                  | 默认值                                  | 说明              |
+| -------------------- | --------------------- | --------------------------------------- | ----------------- |
+| `vueVersion`         | `2 \| 3 \| undefined` | `undefined`                             | 显式指定 Vue 版本 |
+| `vueBindAttr`        | `boolean`             | `true`                                  | 是否解析动态绑定  |
+| `functions`          | `string[]`            | `['t', '$t']`                           | 翻译函数名        |
+| `namespaceFunctions` | `string[]`            | `['useTranslation', 'withTranslation']` | 命名空间函数      |
+| `attr`               | `string`              | `'data-i18n'`                           | i18n 属性名       |
+| `optionAttr`         | `string`              | `'data-i18n-options'`                   | 选项属性名        |
+| `filePatterns`       | `string[]`            | `['.vue', '.nvue']`                     | 文件匹配模式      |
 
 ## 开发
 
