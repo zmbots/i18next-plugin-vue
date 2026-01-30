@@ -1,6 +1,6 @@
-# i18next-cli-vue
+# @i18next-plugin/vue
 
-[![npm version](https://img.shields.io/npm/v/i18next-cli-vue.svg)](https://www.npmjs.com/package/i18next-cli-vue) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Vue 2.6+](https://img.shields.io/badge/Vue-2.6+-41b883.svg)](https://vuejs.org/) [![Vue 3.x](https://img.shields.io/badge/Vue-3.x-41b883.svg)](https://vuejs.org/) [![pkg.pr.new](https://pkg.pr.new/badge/PBK-B/i18next-cli-vue)](https://pkg.pr.new/~/PBK-B/i18next-cli-vue)
+[![npm version](https://img.shields.io/npm/v/@i18next-plugin/vue.svg)](https://www.npmjs.com/package/@i18next-plugin/vue) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Vue 2.6+](https://img.shields.io/badge/Vue-2.6+-41b883.svg)](https://vuejs.org/) [![Vue 3.x](https://img.shields.io/badge/Vue-3.x-41b883.svg)](https://vuejs.org/) [![pkg.pr.new](https://pkg.pr.new/badge/zmbots/i18next-plugin-vue)](https://pkg.pr.new/~/@i18next-plugin/vue)
 
 [English](README.md) | [中文](README.zh-CN.md)
 
@@ -17,7 +17,7 @@ i18next-cli plugin for extracting i18n translation keys from Vue Single File Com
 ## Installation
 
 ```bash
-npm install i18next-cli-vue --save-dev
+npm install @i18next-plugin/vue --save-dev
 ```
 
 ## Usage
@@ -27,7 +27,7 @@ npm install i18next-cli-vue --save-dev
 ```javascript
 // i18next.config.js
 import { defineConfig } from 'i18next-cli';
-import i18nextVuePlugin from 'i18next-cli-vue';
+import i18nextVuePlugin from '@i18next-plugin/vue';
 
 export default defineConfig({
 	locales: ['en', 'zh', 'fr'],
@@ -45,7 +45,7 @@ export default defineConfig({
 ```javascript
 // i18next.config.js
 import { defineConfig } from 'i18next-cli';
-import i18nextVuePlugin from 'i18next-cli-vue';
+import i18nextVuePlugin from '@i18next-plugin/vue';
 
 export default defineConfig({
 	locales: ['en', 'zh'],

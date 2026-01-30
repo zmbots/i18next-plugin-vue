@@ -1,5 +1,5 @@
 ---
-'i18next-cli-vue': patch
+'@i18next-plugin/vue': patch
 ---
 
 bump

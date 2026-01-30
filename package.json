@@ -1,8 +1,8 @@
 {
 	"type": "module",
-	"name": "i18next-cli-vue",
+	"name": "@i18next-plugin/vue",
 	"version": "1.0.2",
-	"description": "i18next-cli plugin for extracting i18n keys from Vue SFC files",
+	"description": "@i18next-plugin/vue plugin for extracting i18n keys/value from Vue SFC files",
 	"author": "PBK-B",
 	"main": "dist/index.js",
 	"module": "dist/index.js",
@@ -58,7 +58,7 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/PBK-B/i18next-cli-vue"
+		"url": "https://github.com/zmbots/i18next-plugin-vue"
 	},
 	"publishConfig": {
 		"registry": "https://registry.npmjs.org",
