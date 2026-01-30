@@ -33,8 +33,8 @@ export default function i18nextVuePlugin(options: VuePluginOptions = {}): Plugin
 	const lintIssuesByPath = new Map<string, LintIssue[]>();
 	let lintContext: LintPluginContext | undefined;
 
-	const plugin: Plugin = {
-		name: 'i18next-cli-vue',
+	return {
+		name: '@i18next-plugin/vue',
 
 		onLoad: createOnLoadHandler(normalizedOptions),
 

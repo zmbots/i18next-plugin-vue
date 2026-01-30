@@ -8,11 +8,11 @@ import { extractScriptKeys, extractKeysFromExpression, extractContextFromExpress
 import { isVueFile } from './utils';
 import { extractVueLintIssues } from './lint/extract';
 
-describe('i18next-cli-vue', () => {
+describe('@i18next-plugin/vue', () => {
 	describe('Plugin Initialization', () => {
 		it('should create plugin with default options', () => {
 			const plugin = i18nextVuePlugin();
-			expect(plugin.name).toBe('i18next-cli-vue');
+			expect(plugin.name).toBe('@i18next-plugin/vue');
 			expect(plugin.onLoad).toBeDefined();
 			expect((plugin as any).lintOnLoad).toBeDefined();
 			expect((plugin as any).lintOnResult).toBeDefined();
@@ -29,7 +29,7 @@ describe('i18next-cli-vue', () => {
 				filePatterns: ['.vue'],
 			});
 
-			expect(plugin.name).toBe('i18next-cli-vue');
+			expect(plugin.name).toBe('@i18next-plugin/vue');
 		});
 	});
 
