@@ -6,11 +6,11 @@ import { extractTemplateKeys } from './template/extract';
 import { extractScriptKeys, extractKeysFromExpression, extractContextFromExpression } from './script/extract';
 import { isVueFile } from './utils';
 
-describe('i18next-cli-vue', () => {
+describe('@i18next-plugin/vue', () => {
 	describe('Plugin Initialization', () => {
 		it('should create plugin with default options', () => {
 			const plugin = i18nextVuePlugin();
-			expect(plugin.name).toBe('i18next-cli-vue');
+			expect(plugin.name).toBe('@i18next-plugin/vue');
 			expect(plugin.onLoad).toBeDefined();
 		});
 
@@ -25,7 +25,7 @@ describe('i18next-cli-vue', () => {
 				filePatterns: ['.vue'],
 			});
 
-			expect(plugin.name).toBe('i18next-cli-vue');
+			expect(plugin.name).toBe('@i18next-plugin/vue');
 		});
 	});
 
